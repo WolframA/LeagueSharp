@@ -23,13 +23,14 @@
 
 #endregion
 
+using System.Linq;
+using LeagueSharp;
+using LeagueSharp.Common;
+
 namespace Support.Util
 {
-    #region
 
-    using System.Linq;
-    using LeagueSharp;
-    using LeagueSharp.Common;
+    #region
 
     #endregion
 
@@ -135,6 +136,12 @@ namespace Support.Util
             return spell.IsReady() && target.IsValidTarget(range ? spell.Range : float.MaxValue, team);
         }
 
+        public static bool CastWithHitChance(this Spell spell, Obj_AI_Base target, string menu)
+        {
+            var hc = PluginBase.Config.Item(menu + ObjectManager.Player.ChampionName).GetHitChance();
+            return spell.CastIfHitchanceEquals(target, hc);
+        }
+
         public static bool IsInRange(this Spell spell, Obj_AI_Base target)
         {
             return ObjectManager.Player.Distance(target) < spell.Range;
@@ -171,6 +178,13 @@ namespace Support.Util
             menu.AddItem(new MenuItem(name + ObjectManager.Player.ChampionName, displayName).SetValue(value));
         }
 
+        public static void AddHitChance(this Menu menu, string name, string displayName, HitChance defaultHitChance)
+        {
+            menu.AddItem(
+                new MenuItem(name + ObjectManager.Player.ChampionName, displayName).SetValue(
+                    new StringList((new[] { "Low", "Medium", "High", "Very High" }), (int) defaultHitChance - 3)));
+        }
+
         public static void AddSlider(this Menu menu, string name, string displayName, int value, int min, int max)
         {
             menu.AddItem(
@@ -181,6 +195,11 @@ namespace Support.Util
         public static void AddObject(this Menu menu, string name, string displayName, object value)
         {
             menu.AddItem(new MenuItem(name + ObjectManager.Player.ChampionName, displayName).SetValue(value));
+        }
+
+        public static HitChance GetHitChance(this MenuItem item)
+        {
+            return (HitChance) item.GetValue<StringList>().SelectedIndex + 3;
         }
     }
 }
