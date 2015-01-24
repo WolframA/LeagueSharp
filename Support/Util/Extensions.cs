@@ -18,17 +18,20 @@
 // 
 // Filename: Support/Support/Extensions.cs
 // Created:  26/11/2014
-// Date:     20/01/2015/11:20
+// Date:     24/01/2015/13:14
 // Author:   h3h3
 
 #endregion
 
-using System.Linq;
-using LeagueSharp;
-using LeagueSharp.Common;
-
 namespace Support.Util
 {
+    #region
+
+    using System.Linq;
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
+    #endregion
 
     #region
 
