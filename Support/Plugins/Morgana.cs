@@ -18,21 +18,22 @@
 // 
 // Filename: Support/Support/Morgana.cs
 // Created:  01/10/2014
-// Date:     20/01/2015/11:20
+// Date:     23/01/2015/11:05
 // Author:   h3h3
 
 #endregion
 
+using System;
+using System.Linq;
+using LeagueSharp;
+using LeagueSharp.Common;
+using Support.Util;
+using ActiveGapcloser = Support.Util.ActiveGapcloser;
+
 namespace Support.Plugins
 {
-    #region
 
-    using System;
-    using System.Linq;
-    using LeagueSharp;
-    using LeagueSharp.Common;
-    using Support.Util;
-    using ActiveGapcloser = Support.Util.ActiveGapcloser;
+    #region
 
     #endregion
 
@@ -55,28 +56,26 @@ namespace Support.Plugins
             {
                 if (ComboMode)
                 {
-                    if (Q.CastCheck(Target, "ComboQ"))
+                    if (Q.CastCheck(Target, "ComboQ") && Q.CastWithHitChance(Target, "ComboQHC"))
                     {
-                        Q.Cast(Target);
+                        return;
                     }
 
                     if (W.CastCheck(Target, "ComboW"))
                     {
-                        foreach (var enemy in
+                        if (
                             ObjectManager.Get<Obj_AI_Hero>()
-                                .Where(
-                                    hero =>
-                                        (hero.HasBuffOfType(BuffType.Snare) || hero.HasBuffOfType(BuffType.Stun) ||
-                                         hero.HasBuffOfType(BuffType.Taunt) && hero.IsValidTarget(W.Range))))
+                                .Where(hero => (hero.IsValidTarget(W.Range) && hero.IsMovementImpaired()))
+                                .Any(enemy => W.Cast(enemy.Position)))
                         {
-                            W.Cast(enemy.Position);
                             return;
                         }
 
-                        foreach (var enemy in
-                            ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(W.Range)))
+                        if (
+                            ObjectManager.Get<Obj_AI_Hero>()
+                                .Where(hero => hero.IsValidTarget(W.Range))
+                                .Any(enemy => W.CastIfWillHit(enemy, 1)))
                         {
-                            W.CastIfWillHit(enemy, 1);
                             return;
                         }
                     }
@@ -86,34 +85,30 @@ namespace Support.Plugins
                     {
                         R.Cast();
                     }
+                    return;
                 }
 
                 if (HarassMode)
                 {
-                    if (Q.CastCheck(Target, "HarassQ"))
+                    if (Q.CastCheck(Target, "HarassQ") && Q.CastWithHitChance(Target, "HarassQHC"))
                     {
-                        Q.Cast(Target);
+                        return;
                     }
 
                     if (W.CastCheck(Target, "HarassW"))
                     {
-                        foreach (var enemy in
+                        if (
                             ObjectManager.Get<Obj_AI_Hero>()
-                                .Where(
-                                    hero =>
-                                        (hero.HasBuffOfType(BuffType.Snare) || hero.HasBuffOfType(BuffType.Stun) ||
-                                         hero.HasBuffOfType(BuffType.Taunt) && hero.IsValidTarget(W.Range))))
+                                .Where(hero => (hero.IsValidTarget(W.Range) && hero.IsMovementImpaired()))
+                                .Any(enemy => W.Cast(enemy.Position)))
                         {
-                            W.Cast(enemy.Position);
                             return;
                         }
 
-                        foreach (var enemy in
-                            ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsValidTarget(W.Range)))
-                        {
-                            W.CastIfWillHit(enemy, 1);
-                            return;
-                        }
+                        if (
+                            ObjectManager.Get<Obj_AI_Hero>()
+                                .Where(hero => hero.IsValidTarget(W.Range))
+                                .Any(enemy => W.CastIfWillHit(enemy, 1))) {}
                     }
                 }
             }
@@ -138,17 +133,29 @@ namespace Support.Plugins
 
         public override void ComboMenu(Menu config)
         {
-            config.AddBool("ComboQ", "Use Q", true);
-            config.AddBool("ComboW", "Use W", true);
-            config.AddBool("ComboE", "Use E", true);
-            config.AddBool("ComboR", "Use R", true);
-            config.AddSlider("ComboCountR", "Targets in range to Ult", 2, 1, 5);
+            var comboQ = config.AddSubMenu(new Menu("Q Settings", "Q"));
+            comboQ.AddBool("ComboQ", "Use Q", true);
+            comboQ.AddHitChance("ComboQHC", "Min HitChance", HitChance.Medium);
+
+            var comboW = config.AddSubMenu(new Menu("W Settings", "W"));
+            comboW.AddBool("ComboW", "Use W", true);
+
+            var comboE = config.AddSubMenu(new Menu("E Settings", "E"));
+            comboE.AddBool("ComboE", "Use E", true);
+
+            var comboR = config.AddSubMenu(new Menu("R Settings", "R"));
+            comboR.AddBool("ComboR", "Use R", true);
+            comboR.AddSlider("ComboCountR", "Targets in range to Ult", 2, 1, 5);
         }
 
         public override void HarassMenu(Menu config)
         {
-            config.AddBool("HarassQ", "Use Q", true);
-            config.AddBool("HarassW", "Use W", true);
+            var harassQ = config.AddSubMenu(new Menu("Q Settings", "Q"));
+            harassQ.AddBool("HarassQ", "Use Q", true);
+            harassQ.AddHitChance("HarassQHC", "Min HitChance", HitChance.High);
+
+            var harassW = config.AddSubMenu(new Menu("W Settings", "W"));
+            harassW.AddBool("HarassW", "Use W", true);
         }
 
         public override void InterruptMenu(Menu config)
