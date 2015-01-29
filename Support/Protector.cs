@@ -149,7 +149,7 @@ namespace Support
             // detector targeted
             var targeted = detector.AddSubMenu(new Menu("Targeted", "Targeted"));
             targeted.AddItem(new MenuItem("TargetedActive", "Active").SetValue(true));
-            foreach (var ally in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsAlly))
+            foreach (var ally in HeroManager.Allies)
             {
                 targeted.AddItem(
                     new MenuItem("Detector.Targeted." + ally.ChampionName, ally.ChampionName).SetValue(true));
@@ -159,7 +159,7 @@ namespace Support
             var skillshot = detector.AddSubMenu(new Menu("Skillshots", "Skillshots"));
             skillshot.AddItem(new MenuItem("SkillshotsActive", "Active").SetValue(true));
             skillshot.AddItem(new MenuItem("IsAboutToHitTime", "IsAboutToHit Time").SetValue(new Slider(200, 0, 400)));
-            foreach (var ally in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsAlly))
+            foreach (var ally in HeroManager.Allies)
             {
                 skillshot.AddItem(
                     new MenuItem("Detector.Skillshots." + ally.ChampionName, ally.ChampionName).SetValue(true));
@@ -170,7 +170,7 @@ namespace Support
             foreach (var spell in ProtectorSpells.Where(s => s.ChampionName == ObjectManager.Player.ChampionName))
             {
                 var spellMenu = spells.AddSubMenu(new Menu(spell.Name, spell.Name));
-                foreach (var ally in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsAlly))
+                foreach (var ally in HeroManager.Allies)
                 {
                     spellMenu.AddItem(
                         new MenuItem("Spells." + spell.Name + "." + ally.ChampionName, ally.ChampionName).SetValue(true));
@@ -182,7 +182,7 @@ namespace Support
             foreach (var item in ProtectorItems)
             {
                 var itemsMenu = items.AddSubMenu(new Menu(item.Name, item.Name));
-                foreach (var ally in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsAlly))
+                foreach (var ally in HeroManager.Allies)
                 {
                     itemsMenu.AddItem(
                         new MenuItem("Items." + item.Name + "." + ally.ChampionName, ally.ChampionName).SetValue(true));
@@ -229,8 +229,8 @@ namespace Support
                 }
 
                 foreach (var hero in
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(h => h.IsAlly && !h.IsDead)
+                    HeroManager.Allies
+                        .Where(h => !h.IsDead)
                         .OrderByDescending(h => h.FlatPhysicalDamageMod)
                         .Where(h => ObjectManager.Player.Distance(h) < mikael.Item.Range))
                 {
@@ -465,8 +465,8 @@ namespace Support
 
                 // Protect
                 foreach (var ally in
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(h => h.IsAlly && h.IsValidTarget(2000, false))
+                    HeroManager.Allies
+                        .Where(h => h.IsValidTarget(2000, false))
                         .OrderByDescending(h => h.FlatPhysicalDamageMod))
                 {
                     var allySafeResult = IsSafe(ally.ServerPosition.To2D());

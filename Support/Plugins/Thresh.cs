@@ -216,10 +216,10 @@ namespace Support.Plugins
             var bestcastposition = new Vector3(0f, 0f, 0f);
 
             foreach (var friend in
-                ObjectManager.Get<Obj_AI_Hero>()
+                HeroManager.Allies
                     .Where(
                         hero =>
-                            hero.IsAlly && !hero.IsMe && hero.Distance(Player) <= W.Range + 300 &&
+                            !hero.IsMe && hero.Distance(Player) <= W.Range + 300 &&
                             hero.Distance(Player) <= W.Range - 300 && hero.Health / hero.MaxHealth * 100 >= 20 &&
                             Player.CountEnemiesInRange(150) >= 1))
             {
@@ -267,14 +267,14 @@ namespace Support.Plugins
             var bestcastposition = new Vector3(0f, 0f, 0f);
 
             foreach (var friend in
-                ObjectManager.Get<Obj_AI_Hero>()
+                HeroManager.Allies
                     .Where(
                         hero =>
-                            hero.IsAlly && !hero.IsMe && hero.Distance(ObjectManager.Player) <= W.Range + 300 &&
+                            !hero.IsMe && hero.Distance(ObjectManager.Player) <= W.Range + 300 &&
                             hero.Distance(ObjectManager.Player) <= W.Range - 200 &&
                             hero.Health / hero.MaxHealth * 100 >= 20 && !hero.IsDead))
             {
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsEnemy))
+                foreach (var enemy in HeroManager.Enemies)
                 {
                     if (friend == null || !(friend.Distance(enemy) <= 300))
                     {

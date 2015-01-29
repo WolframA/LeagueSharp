@@ -142,7 +142,7 @@ namespace Support.Plugins
             if (Player.Distance(Target) > W.Range) // target out of range try bounce
             {
                 var bounceTarget =
-                    ObjectManager.Get<Obj_AI_Hero>()
+                    HeroManager.Enemies
                         .SingleOrDefault(hero => hero.IsValidAlly(W.Range) && hero.Distance(Target) < W.Range);
 
                 if (bounceTarget != null && bounceTarget.MaxHealth - bounceTarget.Health > WHeal) // use bounce & heal
@@ -211,7 +211,7 @@ namespace Support.Plugins
         public override void MiscMenu(Menu config)
         {
             var sub = config.AddSubMenu(new Menu("Use E on Attacks", "Misc.E.AA.Menu"));
-            foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsAlly && !h.IsMe))
+            foreach (var hero in HeroManager.Allies.Where(h => !h.IsMe))
             {
                 sub.AddBool("Misc.E.AA." + hero.ChampionName, hero.ChampionName, true);
             }

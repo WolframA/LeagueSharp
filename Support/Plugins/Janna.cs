@@ -280,7 +280,7 @@ namespace Support.Plugins
 
             // build aa menu
             var aa = config.AddSubMenu(new Menu("Use E on Attacks", "Misc.E.AA.Menu"));
-            foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(h => h.IsAlly && !h.IsMe))
+            foreach (var hero in HeroManager.Allies.Where(h => !h.IsMe))
             {
                 aa.AddBool("Misc.E.AA." + hero.ChampionName, hero.ChampionName, true);
             }
@@ -288,8 +288,8 @@ namespace Support.Plugins
             // build spell menu
             var dmg = config.AddSubMenu(new Menu("Use E on Spell", "Misc.E.Spell.Menu"));
             foreach (var spell in
-                ObjectManager.Get<Obj_AI_Hero>()
-                    .Where(h => h.IsAlly && !h.IsMe)
+                HeroManager.Allies
+                    .Where(h => !h.IsMe)
                     .SelectMany(hero => DamageBoostDatabase.Spells.Where(s => s.Champion == hero.ChampionName)))
             {
                 dmg.AddSlider("Misc.E.Spell." + spell.Spell, spell.Champion + " " + spell.Slot, spell.Priority, 0, 3);
