@@ -236,16 +236,16 @@ namespace Support.Plugins
             }
         }
 
-        public override void OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
+        public override void OnPossibleToInterrupt(Obj_AI_Hero target, Interrupter2.InterruptableTargetEventArgs args)
         {
-            if ((spell.DangerLevel < InterruptableDangerLevel.High && unit.IsAlly))
+            if ((args.DangerLevel < Interrupter2.DangerLevel.High && target.IsAlly))
             {
                 return;
             }
 
-            if (Q.CastCheck(unit, "Interrupt.Q"))
+            if (Q.CastCheck(target, "Interrupt.Q"))
             {
-                var pred = Q.GetPrediction(unit);
+                var pred = Q.GetPrediction(target);
                 if (pred.Hitchance >= HitChance.Medium)
                 {
                     Q.Cast(pred.CastPosition);
@@ -255,7 +255,7 @@ namespace Support.Plugins
                 }
             }
 
-            if (!Q.IsReady() && Environment.TickCount - LastQInterrupt > 500 && R.CastCheck(unit, "Interrupt.R"))
+            if (!Q.IsReady() && Environment.TickCount - LastQInterrupt > 500 && R.CastCheck(target, "Interrupt.R"))
             {
                 R.Cast();
             }
