@@ -47,7 +47,6 @@ namespace Killability
             _spells = new List<Spell>();
             _items = new List<Items.Item>
             {
-                new Items.Item(3128, 750), // Deathfire Grasp
                 new Items.Item(3077, 400), // Tiamat
                 new Items.Item(3074, 400), // Ravenous Hydra
                 new Items.Item(3146, 700), // Hextech Gunblade
@@ -154,7 +153,6 @@ namespace Killability
             {
                 switch (item.Id)
                 {
-                    case 3128: comboDmg += player.GetItemDamage(target, Damage.DamageItems.Dfg); break;
                     case 3077: comboDmg += player.GetItemDamage(target, Damage.DamageItems.Tiamat); break;
                     case 3074: comboDmg += player.GetItemDamage(target, Damage.DamageItems.Hydra); break;
                     case 3146: comboDmg += player.GetItemDamage(target, Damage.DamageItems.Hexgun); break;
