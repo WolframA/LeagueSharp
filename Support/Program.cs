@@ -15,7 +15,7 @@ namespace Support
         {
             Version = Assembly.GetExecutingAssembly().GetName().Version;
 
-            Game.OnStart += a =>
+            CustomEvents.Game.OnGameLoad += a =>
             {
                 try
                 {
