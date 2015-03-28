@@ -78,7 +78,7 @@ namespace AntiToxic
 
         static void Main(string[] args)
         {
-            Game.OnGameInput += eventArgs =>
+            Game.OnInput += eventArgs =>
             {
                 eventArgs.Process = false;
 

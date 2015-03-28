@@ -44,7 +44,7 @@ namespace SpellDetector.Targeted
             {
                 InitComplete = true;
                 Obj_AI_Base.OnProcessSpellCast += OnTargetSpellDetection;
-                Game.OnGameUpdate += OnGameUpdate;
+                Game.OnUpdate += OnGameUpdate;
                 Console.WriteLine("Target Spell Detector Init");
             }
         }

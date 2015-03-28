@@ -94,7 +94,7 @@ namespace VayNivia
                             new MenuItem("Condemn.Key", "Condemn Key").SetValue(new KeyBind(32, KeyBindType.Press)));
                         Config.AddToMainMenu();
 
-                        Game.OnGameUpdate += VayneIntegration;
+                        Game.OnUpdate += VayneIntegration;
                         Extensions.PrintMessage("Vayne by h3h3 loaded.");
                     }
                 }
