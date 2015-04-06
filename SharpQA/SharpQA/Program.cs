@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace SharpQA
 {
@@ -7,7 +8,7 @@ namespace SharpQA
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine(DateTime.Now + " LeagueSharp User QA Tests started." + Environment.NewLine);
+            Console.WriteLine(DateTime.Now + " LeagueSharp User Diagnostics Tool " + Assembly.GetExecutingAssembly().GetName().Version + " started." + Environment.NewLine);
             WindowsTests.Run();
             LoaderTests.Run();
             LeagueSharpTests.Run();

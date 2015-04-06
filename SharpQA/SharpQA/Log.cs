@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace SharpQA
 {
@@ -29,7 +30,7 @@ namespace SharpQA
 
         public static void Save()
         {
-            File.WriteAllText(LogFile, DateTime.Now + " LeagueSharp User QA Tests started." + Environment.NewLine + Environment.NewLine);
+            File.WriteAllText(LogFile, DateTime.Now + " LeagueSharp User Diagnostics Tool " + Assembly.GetExecutingAssembly().GetName().Version + " started." + Environment.NewLine + Environment.NewLine);
 
             File.AppendAllText(LogFile, "Tests" + Environment.NewLine);
             File.AppendAllText(LogFile, "=====================================" + Environment.NewLine);
