@@ -10,7 +10,6 @@ namespace LeagueSharp.Loader.Data
     [XmlRoot(Namespace = "", IsNullable = false)]
     public class Config
     {
-        public string AppDirectory { get; set; }
         public bool FirstRun { get; set; }
         public Hotkeys Hotkeys { get; set; }
         public bool Install { get; set; }

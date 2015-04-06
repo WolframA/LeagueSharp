@@ -24,7 +24,6 @@ namespace SharpQA
 
                 Log.Info("");
                 Log.Info("Auto Inject: " + config.Install);
-                Log.Info("AppData: " + config.AppDirectory);
                 Log.Info("Auto Update: " + config.UpdateOnLoad);
             }
             catch (Exception e)

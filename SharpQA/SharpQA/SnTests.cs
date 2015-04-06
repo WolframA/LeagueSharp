@@ -47,6 +47,11 @@ namespace SharpQA
 
         private static bool Sign()
         {
+            if (!File.Exists(SnFile) || !File.Exists(KeyFile) || !File.Exists(DllFile))
+            {
+                return false;
+            }
+
             try
             {
                 var p = new Process
@@ -75,6 +80,11 @@ namespace SharpQA
 
         private static bool Verify()
         {
+            if (!File.Exists(SnFile) || !File.Exists(KeyFile) || !File.Exists(DllFile))
+            {
+                return false;
+            }
+
             try
             {
                 var p = new Process
@@ -85,7 +95,7 @@ namespace SharpQA
                         RedirectStandardOutput = true,
                         WorkingDirectory = SystemDirectory,
                         FileName = SnFile,
-                        Arguments = "-v " + DllFile
+                        Arguments = string.Format("-vf \"{0}\"", DllFile)
                     }
                 };
                 p.Start();

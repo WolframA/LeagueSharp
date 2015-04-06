@@ -11,8 +11,7 @@ namespace SharpQA
         {
             "Microsoft .NET Framework 4.5 Multi-Targeting Pack",
             "Microsoft .NET Framework 4.5.1 Multi-Targeting Pack",
-            "Microsoft Visual C++ 2012 Redistributable (x86)",
-            "Microsoft Visual C++ 2013 Redistributable (x86)"
+            "Microsoft Visual C++ 2012 Redistributable (x86)"
         };
 
         private static bool Requirements()
@@ -49,6 +48,7 @@ namespace SharpQA
             {
                 if (!installed.Any(s => s.StartsWith(requirement)))
                 {
+                    Log.Info("Not Found: " + installed.FirstOrDefault(s => s.StartsWith(requirement)));
                     return false;
                 }
 
