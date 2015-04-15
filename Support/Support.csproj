@@ -56,19 +56,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="clipper_library">
-      <HintPath>..\LeagueSharp\System\clipper_library.dll</HintPath>
+      <HintPath>D:\Games\LeagueSharp\System\clipper_library.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp">
-      <HintPath>..\LeagueSharp\System\LeagueSharp.dll</HintPath>
+      <HintPath>D:\Games\LeagueSharp\System\LeagueSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="LeagueSharp.Common">
+      <HintPath>..\..\..\Games\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Sandbox">
-      <HintPath>..\LeagueSharp\System\LeagueSharp.Sandbox.dll</HintPath>
+      <HintPath>D:\Games\LeagueSharp\System\LeagueSharp.Sandbox.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\LeagueSharp\System\SharpDX.dll</HintPath>
+      <HintPath>D:\Games\LeagueSharp\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9">
-      <HintPath>..\LeagueSharp\System\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>D:\Games\LeagueSharp\System\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
