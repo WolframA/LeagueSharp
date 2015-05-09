@@ -19,7 +19,41 @@ namespace Support.Plugins
             Q.SetSkillshot(0.25f, 120f, 900f, false, SkillshotType.SkillshotLine);
             GameObject.OnCreate += TowerAttackOnCreate;
             GameObject.OnCreate += RangeAttackOnCreate;
+            MissileClient.OnCreate += MissileClientOnOnCreate;
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
+        }
+
+        private void MissileClientOnOnCreate(GameObject sender, EventArgs args)
+        {
+            if (!sender.IsValid<MissileClient>() || IsUltChanneling)
+            {
+                return;
+            }
+
+            var missile = (MissileClient)sender;
+
+            // Caster ally hero / not me
+            if (!missile.SpellCaster.IsValid<Obj_AI_Hero>() || !missile.SpellCaster.IsAlly || missile.SpellCaster.IsMe ||
+                missile.SpellCaster.IsMelee())
+            {
+                return;
+            }
+
+            // Target enemy hero
+            if (!missile.Target.IsValid<Obj_AI_Hero>() || !missile.Target.IsEnemy)
+            {
+                return;
+            }
+
+            var caster = (Obj_AI_Hero)missile.SpellCaster;
+
+            // only in SBTW mode
+            if (E.IsReady() && E.IsInRange(caster) &&
+                ConfigValue<bool>("Misc.E.AA." + caster.ChampionName))
+            {
+                E.CastOnUnit(caster);
+                Console.WriteLine("AA Boost " + missile.SData.Name);
+            }
         }
 
         private bool IsUltChanneling { get; set; }
@@ -108,18 +142,21 @@ namespace Support.Plugins
                             if (Player.ManaPercentage() > ConfigValue<Slider>("Mana.E.Priority.1").Value)
                             {
                                 E.CastOnUnit(caster);
+                                Console.WriteLine("DMG Boost " + spell);
                             }
                             break;
                         case 2:
                             if (Player.ManaPercentage() > ConfigValue<Slider>("Mana.E.Priority.2").Value)
                             {
                                 E.CastOnUnit(caster);
+                                Console.WriteLine("DMG Boost " + spell);
                             }
                             break;
                         case 3:
                             if (Player.ManaPercentage() > ConfigValue<Slider>("Mana.E.Priority.3").Value)
                             {
                                 E.CastOnUnit(caster);
+                                Console.WriteLine("DMG Boost " + spell);
                             }
                             break;
                     }
@@ -143,6 +180,8 @@ namespace Support.Plugins
                 return;
             }
 
+            Console.WriteLine("Target:{0} Caster:{1}", missile.Target.Name, missile.SpellCaster.Name);
+
             // Target enemy hero
             if (!missile.Target.IsValid<Obj_AI_Hero>() || !missile.Target.IsEnemy)
             {
@@ -152,10 +191,11 @@ namespace Support.Plugins
             var caster = (Obj_AI_Hero) missile.SpellCaster;
 
             // only in SBTW mode
-            if (E.IsReady() && E.IsInRange(caster) && (ComboMode || HarassMode) &&
+            if (E.IsReady() && E.IsInRange(caster) &&
                 ConfigValue<bool>("Misc.E.AA." + caster.ChampionName))
             {
                 E.CastOnUnit(caster);
+                Console.WriteLine("AA Boost " + missile.SData.Name);
             }
         }
 
@@ -251,7 +291,7 @@ namespace Support.Plugins
 
             // build aa menu
             var aa = config.AddSubMenu(new Menu("Use E on Attacks", "Misc.E.AA.Menu"));
-            foreach (var hero in HeroManager.Allies.Where(h => !h.IsMe))
+            foreach (var hero in HeroManager.Allies)
             {
                 aa.AddBool("Misc.E.AA." + hero.ChampionName, hero.ChampionName, true);
             }
