@@ -16,12 +16,13 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // </copyright>
 // <summary>
-//   TODO The program.
+//   ProFlash, Fail Flash and Insec / Stun Protection
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace ProFlash
 {
     using System;
+    using System.Threading.Tasks;
 
     using LeagueSharp;
     using LeagueSharp.Common;
@@ -32,12 +33,53 @@ namespace ProFlash
 
     internal class Program
     {
-        #region Static Fields
+        #region Static Fields and Properties
 
-        private static readonly Menu Menu = new Menu("ProFlash", "ProFlash", true);
+        private static Menu Menu;
+        private static SpellSlot FlashSlot;
+        private static Vector3 WallPosition;
         private static Vector3 FlashPosition;
         private static int LastCastAttempt;
-        private static Vector3 WallPosition;
+
+        private static bool MenuActive
+        {
+            get
+            {
+                return Menu.Item("active").GetValue<bool>();
+            }
+        }
+
+        private static bool MenuHealth
+        {
+            get
+            {
+                return Menu.Item("health").GetValue<Slider>().Value < ObjectManager.Player.HealthPercent;
+            }
+        }
+
+        private static bool MenuWall
+        {
+            get
+            {
+                return Menu.Item("wall").GetValue<bool>();
+            }
+        }
+
+        private static bool MenuInsec
+        {
+            get
+            {
+                return Menu.Item("insec").GetValue<bool>();
+            }
+        }
+
+        private static bool MenuCondemn
+        {
+            get
+            {
+                return Menu.Item("condemn").GetValue<bool>();
+            }
+        }
 
         #endregion
 
@@ -49,10 +91,10 @@ namespace ProFlash
 
             for (float d = 0; d < from.Distance(to); d = d + step)
             {
-                var testPoint = from + d * direction;
+                var testPoint = from + (d * direction);
                 if (testPoint.IsWall())
                 {
-                    return from + (d - step) * direction;
+                    return from + ((d - step) * direction);
                 }
             }
 
@@ -65,24 +107,40 @@ namespace ProFlash
 
         private static void Main(string[] args)
         {
-            Spellbook.OnCastSpell += OnCastSpell;
-            //Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
-            Drawing.OnDraw += OnDraw;
+            CustomEvents.Game.OnGameLoad += eventArgs =>
+                {
+                    Task.Factory.StartNew(
+                        () =>
+                        {
+                            FlashSlot = ObjectManager.Player.GetSpellSlot("summonerflash");
+                            if (FlashSlot == SpellSlot.Unknown)
+                            {
+                                Console.WriteLine("ProFlash witout Flash, nice try dude...");
+                                return;
+                            }
 
-            Menu.AddItem(new MenuItem("active", "Active").SetValue(true));
-            //Menu.AddItem(new MenuItem("anti.lee", "Insec Protection").SetValue(true));
-            Menu.AddItem(new MenuItem("anit.wall", "Over wall fail Protection").SetValue(true));
-            Menu.AddToMainMenu();
+                            Menu = new Menu("ProFlash", "ProFlash", true);
+                            Menu.AddItem(new MenuItem("active", "Active").SetValue(true));
+                            Menu.AddItem(new MenuItem("insec", "Insec Protection").SetValue(true));
+                            Menu.AddItem(new MenuItem("condemn", "Condemn Protection").SetValue(true));
+                            Menu.AddItem(new MenuItem("wall", "Fail Flash Protection").SetValue(true));
+                            Menu.AddToMainMenu();
+
+                            Spellbook.OnCastSpell += OnCastSpell;
+                            //Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
+                            Drawing.OnDraw += OnDraw;
+                        });
+                };
         }
 
         private static void OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)
         {
-            if (!Menu.Item("active").GetValue<bool>())
+            if (!MenuActive)
             {
                 return;
             }
 
-            if (!Menu.Item("anit.wall").GetValue<bool>())
+            if (!MenuWall)
             {
                 return;
             }
@@ -97,8 +155,7 @@ namespace ProFlash
                 return;
             }
 
-            var flashSlot = ObjectManager.Player.GetSpellSlot("summonerflash");
-            if (flashSlot == SpellSlot.Unknown || args.Slot != flashSlot)
+            if (args.Slot != FlashSlot)
             {
                 return;
             }
@@ -146,7 +203,7 @@ namespace ProFlash
             if (!FlashPosition.IsZero)
             {
                 Console.WriteLine("- FLASH -");
-                ObjectManager.Player.Spellbook.CastSpell(flashSlot, FlashPosition, false);
+                ObjectManager.Player.Spellbook.CastSpell(FlashSlot, FlashPosition, false);
             }
         }
 
@@ -161,12 +218,12 @@ namespace ProFlash
 
         private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (!Menu.Item("active").GetValue<bool>())
+            if (!MenuActive)
             {
                 return;
             }
 
-            if (!Menu.Item("anti.lee").GetValue<bool>())
+            if (!MenuInsec)
             {
                 return;
             }
@@ -191,19 +248,13 @@ namespace ProFlash
                 return;
             }
 
-            var flashSlot = ObjectManager.Player.GetSpellSlot("summonerflash");
-            if (flashSlot == SpellSlot.Unknown)
-            {
-                return;
-            }
-
-            if (!ObjectManager.Player.GetSpell(flashSlot).IsReady())
+            if (!ObjectManager.Player.GetSpell(FlashSlot).IsReady())
             {
                 return;
             }
 
             FlashPosition = ObjectManager.Player.Position.Extend(sender.Position, 450);
-            ObjectManager.Player.Spellbook.CastSpell(flashSlot, FlashPosition, false);
+            ObjectManager.Player.Spellbook.CastSpell(FlashSlot, FlashPosition, false);
         }
 
         #endregion
