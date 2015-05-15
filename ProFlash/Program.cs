@@ -109,27 +109,23 @@ namespace ProFlash
         {
             CustomEvents.Game.OnGameLoad += eventArgs =>
                 {
-                    Task.Factory.StartNew(
-                        () =>
-                        {
-                            FlashSlot = ObjectManager.Player.GetSpellSlot("summonerflash");
-                            if (FlashSlot == SpellSlot.Unknown)
-                            {
-                                Console.WriteLine("ProFlash witout Flash, nice try dude...");
-                                return;
-                            }
+                    FlashSlot = ObjectManager.Player.GetSpellSlot("summonerflash");
+                    if (FlashSlot == SpellSlot.Unknown)
+                    {
+                        Console.WriteLine("ProFlash witout Flash, nice try dude...");
+                        return;
+                    }
 
-                            Menu = new Menu("ProFlash", "ProFlash", true);
-                            Menu.AddItem(new MenuItem("active", "Active").SetValue(true));
-                            Menu.AddItem(new MenuItem("insec", "Insec Protection").SetValue(true));
-                            Menu.AddItem(new MenuItem("condemn", "Condemn Protection").SetValue(true));
-                            Menu.AddItem(new MenuItem("wall", "Fail Flash Protection").SetValue(true));
-                            Menu.AddToMainMenu();
+                    Menu = new Menu("ProFlash", "ProFlash", true);
+                    Menu.AddItem(new MenuItem("active", "Active").SetValue(true));
+                    Menu.AddItem(new MenuItem("insec", "Insec Protection").SetValue(true));
+                    Menu.AddItem(new MenuItem("condemn", "Condemn Protection").SetValue(true));
+                    Menu.AddItem(new MenuItem("wall", "Fail Flash Protection").SetValue(true));
+                    Menu.AddToMainMenu();
 
-                            Spellbook.OnCastSpell += OnCastSpell;
-                            //Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
-                            Drawing.OnDraw += OnDraw;
-                        });
+                    Spellbook.OnCastSpell += OnCastSpell;
+                    //Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
+                    Drawing.OnDraw += OnDraw;
                 };
         }
 
