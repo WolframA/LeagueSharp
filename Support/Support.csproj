@@ -62,10 +62,7 @@
       <HintPath>D:\Games\LeagueSharp\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>..\..\..\Games\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="LeagueSharp.Sandbox">
-      <HintPath>D:\Games\LeagueSharp\System\LeagueSharp.Sandbox.dll</HintPath>
+      <HintPath>D:\Games\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
       <HintPath>D:\Games\LeagueSharp\System\SharpDX.dll</HintPath>

@@ -9,6 +9,8 @@ namespace Support.Plugins
 {
     public class Nunu : PluginBase
     {
+        private int last = 0;
+
         public Nunu()
         {
             Q = new Spell(SpellSlot.Q, 125);
@@ -76,6 +78,12 @@ namespace Support.Plugins
                     E.CastOnUnit(Target);
                 }
             }
+
+            if (ConfigValue<StringList>("Misc.Laugh").SelectedValue == "ON" && Player.CountEnemiesInRange(2000) > 0 && last + 4200 < Environment.TickCount)
+            {
+                Game.SendEmote(Emote.Laugh);
+                last = Environment.TickCount;
+            }
         }
 
         public override void OnEnemyGapcloser(ActiveGapcloser gapcloser)
@@ -114,7 +122,7 @@ namespace Support.Plugins
 
         public override void MiscMenu(Menu config)
         {
-            config.AddList("Misc.Laugh", "Laugh Emote", new[] {"OFF", "ON", "ON + Mute"});
+            config.AddList("Misc.Laugh", "Laugh Emote", new[] {"OFF", "ON"});
         }
 
         public override void InterruptMenu(Menu config)
