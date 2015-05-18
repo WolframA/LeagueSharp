@@ -84,18 +84,20 @@ namespace VayNivia
 
                     if (ObjectManager.Player.ChampionName == "Anivia")
                     {
+                        Config.AddItem(new MenuItem("Active", "Active").SetValue(new KeyBind(32, KeyBindType.Press)));
+                        Config.AddToMainMenu();
+
                         Obj_AI_Base.OnProcessSpellCast += AniviaIntegration;
-                        Extensions.PrintMessage("Aniva by h3h3 loaded.");
+                        Console.WriteLine("Aniva by h3h3 loaded.");
                     }
 
                     if (ObjectManager.Player.ChampionName == "Vayne")
                     {
-                        Config.AddItem(
-                            new MenuItem("Condemn.Key", "Condemn Key").SetValue(new KeyBind(32, KeyBindType.Press)));
+                        Config.AddItem(new MenuItem("Condemn.Key", "Condemn Key").SetValue(new KeyBind(32, KeyBindType.Press)));
                         Config.AddToMainMenu();
 
                         Game.OnUpdate += VayneIntegration;
-                        Extensions.PrintMessage("Vayne by h3h3 loaded.");
+                        Console.WriteLine("Vayne by h3h3 loaded.");
                     }
                 }
             };
@@ -163,7 +165,7 @@ namespace VayNivia
     {
         public static bool IsValid<T>(this GameObject obj)
         {
-            return obj.IsValid && obj is T;
+            return obj != null && obj.IsValid && obj is T;
         }
 
         public static bool IsInRange(this Spell spell, Vector3 pos)
