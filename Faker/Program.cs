@@ -20,7 +20,7 @@ namespace Faker
             Game.OnChat += OnChatFake;
             Game.OnChat += OnChatMessage;
             Game.OnChat += OnChatSender;
-            CustomEvents.Game.OnGameLoad += eventArgs => Notifications.AddNotification("Faker by h3h3 Loaded.");
+            CustomEvents.Game.OnGameLoad += eventArgs => Notifications.AddNotification("Faker by h3h3 Loaded.", 5);
         }
 
         private static void OnChatFake(GameChatEventArgs args)
@@ -43,7 +43,7 @@ namespace Faker
             args.Process = false;
 
             var msg = args.Message.Substring(args.Message.IndexOf(" ") + 1);
-            var message = string.Format("{0}{1}[{2}] {3}", Message, new string(' ', 70), Sender, msg);
+            var message = string.Format("/all {0}{1}[{2}] {3}", Message, new string(' ', 70), Sender, msg);
 
             Game.Say(message);
         }
@@ -68,7 +68,7 @@ namespace Faker
             args.Process = false;
 
             var msg = args.Message.Substring(args.Message.IndexOf(" ") + 1);
-            Notifications.AddNotification("Set fake Sender to '" + msg + "'");
+            Notifications.AddNotification("Set fake Sender to '" + msg + "'", 5);
         }
 
         private static void OnChatMessage(GameChatEventArgs args)
@@ -91,7 +91,7 @@ namespace Faker
             args.Process = false;
 
             var msg = args.Message.Substring(args.Message.IndexOf(" ") + 1);
-            Notifications.AddNotification("Set fake Message to '" + msg + "'");
+            Notifications.AddNotification("Set fake Message to '" + msg + "'", 5);
         }
 
         #endregion
