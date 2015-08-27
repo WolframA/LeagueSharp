@@ -1,8 +1,8 @@
-﻿using System;
-using System.Reflection.Emit;
-
-namespace Support.Util
+﻿namespace Support.Util
 {
+    using System;
+    using System.Reflection.Emit;
+
     public class DynamicInitializer
     {
         public static TV NewInstance<TV>() where TV : class

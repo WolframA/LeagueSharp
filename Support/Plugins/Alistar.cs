@@ -1,90 +1,24 @@
-﻿using System;
-using LeagueSharp;
-using LeagueSharp.Common;
-using Support.Util;
-using ActiveGapcloser = Support.Util.ActiveGapcloser;
-
-namespace Support.Plugins
+﻿namespace Support.Plugins
 {
+    using System;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
+    using Support.Util;
+
+    using ActiveGapcloser = LeagueSharp.Common.ActiveGapcloser;
+
     public class Alistar : PluginBase
     {
         public Alistar()
         {
-            Q = new Spell(SpellSlot.Q, 365);
-            W = new Spell(SpellSlot.W, 650);
-            E = new Spell(SpellSlot.E, 575);
-            R = new Spell(SpellSlot.R, 0);
+            this.Q = new Spell(SpellSlot.Q, 365);
+            this.W = new Spell(SpellSlot.W, 650);
+            this.E = new Spell(SpellSlot.E, 575);
+            this.R = new Spell(SpellSlot.R, 0);
 
-            W.SetTargetted(0.5f, float.MaxValue);
-        }
-
-        public override void OnUpdate(EventArgs args)
-        {
-            if (ComboMode)
-            {
-                if (Q.CastCheck(Target, "Combo.Q"))
-                {
-                    Q.Cast();
-                }
-
-                if (Q.IsReady() && W.CastCheck(Target, "Combo.W"))
-                {
-                    W.CastOnUnit(Target);
-                    var jumpTime = Math.Max(0, Player.Distance(Target) - 500)*10/25 + 25;
-                    Utility.DelayAction.Add((int) jumpTime, () => Q.Cast());
-                }
-
-                var ally = Helpers.AllyBelowHp(ConfigValue<Slider>("Combo.E.Health").Value, E.Range);
-                if (E.CastCheck(ally, "Combo.E", true, false))
-                {
-                    E.Cast();
-                }
-            }
-
-            if (HarassMode)
-            {
-                if (Q.CastCheck(Target, "Harass.Q"))
-                {
-                    Q.Cast();
-                }
-
-                var ally = Helpers.AllyBelowHp(ConfigValue<Slider>("Harass.E.Health").Value, E.Range);
-                if (E.CastCheck(ally, "Harass.E", true, false))
-                {
-                    E.Cast();
-                }
-            }
-        }
-
-        public override void OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        {
-            if (gapcloser.Sender.IsAlly)
-            {
-                return;
-            }
-
-            if (W.CastCheck(gapcloser.Sender, "Gapcloser.W"))
-            {
-                W.CastOnUnit(gapcloser.Sender);
-            }
-        }
-
-        public override void OnPossibleToInterrupt(Obj_AI_Hero target, Interrupter2.InterruptableTargetEventArgs args)
-        {
-            if (args.DangerLevel < Interrupter2.DangerLevel.High || target.IsAlly)
-            {
-                return;
-            }
-
-            if (Q.CastCheck(target, "Interrupt.Q"))
-            {
-                Q.Cast();
-            }
-
-            if (W.CastCheck(target, "Interrupt.W"))
-            {
-                W.CastOnUnit(target);
-            }
+            this.W.SetTargetted(0.5f, float.MaxValue);
         }
 
         public override void ComboMenu(Menu config)
@@ -108,6 +42,75 @@ namespace Support.Plugins
 
             config.AddBool("Interrupt.Q", "Use Q to Interrupt Spells", true);
             config.AddBool("Interrupt.W", "Use W to Interrupt Spells", true);
+        }
+
+        public override void OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (gapcloser.Sender.IsAlly)
+            {
+                return;
+            }
+
+            if (this.W.CastCheck(gapcloser.Sender, "Gapcloser.W"))
+            {
+                this.W.CastOnUnit(gapcloser.Sender);
+            }
+        }
+
+        public override void OnPossibleToInterrupt(Obj_AI_Hero target, Interrupter2.InterruptableTargetEventArgs args)
+        {
+            if (args.DangerLevel < Interrupter2.DangerLevel.High || target.IsAlly)
+            {
+                return;
+            }
+
+            if (this.Q.CastCheck(target, "Interrupt.Q"))
+            {
+                this.Q.Cast();
+            }
+
+            if (this.W.CastCheck(target, "Interrupt.W"))
+            {
+                this.W.CastOnUnit(target);
+            }
+        }
+
+        public override void OnUpdate(EventArgs args)
+        {
+            if (this.ComboMode)
+            {
+                if (this.Q.CastCheck(this.Target, "Combo.Q"))
+                {
+                    this.Q.Cast();
+                }
+
+                if (this.Q.IsReady() && this.W.CastCheck(this.Target, "Combo.W"))
+                {
+                    this.W.CastOnUnit(this.Target);
+                    var jumpTime = Math.Max(0, this.Player.Distance(this.Target) - 500) * 10 / 25 + 25;
+                    Utility.DelayAction.Add((int)jumpTime, () => this.Q.Cast());
+                }
+
+                var ally = Helpers.AllyBelowHp(this.ConfigValue<Slider>("Combo.E.Health").Value, this.E.Range);
+                if (this.E.CastCheck(ally, "Combo.E", true, false))
+                {
+                    this.E.Cast();
+                }
+            }
+
+            if (this.HarassMode)
+            {
+                if (this.Q.CastCheck(this.Target, "Harass.Q"))
+                {
+                    this.Q.Cast();
+                }
+
+                var ally = Helpers.AllyBelowHp(this.ConfigValue<Slider>("Harass.E.Health").Value, this.E.Range);
+                if (this.E.CastCheck(ally, "Harass.E", true, false))
+                {
+                    this.E.Cast();
+                }
+            }
         }
     }
 }

@@ -1,108 +1,30 @@
-﻿using System;
-using LeagueSharp;
-using LeagueSharp.Common;
-using Support.Util;
-using ActiveGapcloser = Support.Util.ActiveGapcloser;
-
-namespace Support.Plugins
+﻿namespace Support.Plugins
 {
+    using System;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
+    using Support.Util;
+
+    using ActiveGapcloser = LeagueSharp.Common.ActiveGapcloser;
+
     public class Karma : PluginBase
     {
         public Karma()
         {
-            Q = new Spell(SpellSlot.Q, 1050);
-            W = new Spell(SpellSlot.W, 700);
-            E = new Spell(SpellSlot.E, 800);
-            R = new Spell(SpellSlot.R, 0);
+            this.Q = new Spell(SpellSlot.Q, 1050);
+            this.W = new Spell(SpellSlot.W, 700);
+            this.E = new Spell(SpellSlot.E, 800);
+            this.R = new Spell(SpellSlot.R, 0);
 
-            Q.SetSkillshot(0.25f, 60f, 1700f, true, SkillshotType.SkillshotLine);
-        }
-
-        public override void OnUpdate(EventArgs args)
-        {
-            if (ComboMode)
-            {
-                if (Q.CastCheck(Target, "Combo.Q") && R.IsReady() && Q.GetPrediction(Target).Hitchance >= HitChance.High &&
-                    Q.GetPrediction(Target).CollisionObjects.Count == 0 &&
-                    Q.GetPrediction(Target).UnitPosition.CountEnemiesInRange(250) >=
-                    ConfigValue<Slider>("Misc.Q.Count").Value)
-                {
-                    R.CastOnUnit(Player);
-                    Utility.DelayAction.Add(200, () => Q.Cast(Target));
-                }
-                if (Q.CastCheck(Target, "Combo.Q"))
-                {
-                    Q.Cast(Target);
-                }
-
-                if (W.CastCheck(Target, "Combo.W") && R.IsReady() &&
-                    Player.HealthPercentage() <= ConfigValue<Slider>("Misc.W.Hp").Value)
-                {
-                    R.CastOnUnit(Player);
-                    Utility.DelayAction.Add(200, () => W.CastOnUnit(Target));
-                }
-                if (W.CastCheck(Target, "Combo.W"))
-                {
-                    W.CastOnUnit(Target);
-                }
-
-                if (E.IsReady() && R.IsReady() &&
-                    Helpers.AllyInRange(600).Count >= ConfigValue<Slider>("Misc.E.Count").Value)
-                {
-                    R.CastOnUnit(Player);
-                    Utility.DelayAction.Add(200, () => E.CastOnUnit(Player));
-                }
-            }
-
-            if (HarassMode)
-            {
-                if (Q.CastCheck(Target, "Harass.Q") && R.IsReady() &&
-                    Q.GetPrediction(Target).Hitchance >= HitChance.High &&
-                    Q.GetPrediction(Target).CollisionObjects.Count == 0 &&
-                    Q.GetPrediction(Target).UnitPosition.CountEnemiesInRange(250) >=
-                    ConfigValue<Slider>("Misc.Q.Count").Value)
-                {
-                    R.CastOnUnit(Player);
-                    Utility.DelayAction.Add(200, () => Q.Cast(Target));
-                }
-                if (Q.CastCheck(Target, "Harass.Q"))
-                {
-                    Q.Cast(Target);
-                }
-
-                if (E.IsReady() && R.IsReady() &&
-                    Helpers.AllyInRange(600).Count >= ConfigValue<Slider>("Misc.E.Count").Value)
-                {
-                    R.CastOnUnit(Player);
-                    Utility.DelayAction.Add(200, () => E.CastOnUnit(Player));
-                }
-            }
-        }
-
-        public override void OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        {
-            if (gapcloser.Sender.IsAlly)
-            {
-                return;
-            }
-
-            if (W.CastCheck(gapcloser.Sender, "Gapcloser.W"))
-            {
-                W.CastOnUnit(gapcloser.Sender);
-            }
+            this.Q.SetSkillshot(0.25f, 60f, 1700f, true, SkillshotType.SkillshotLine);
         }
 
         public override void ComboMenu(Menu config)
         {
             config.AddBool("Combo.Q", "Use Q", true);
             config.AddBool("Combo.W", "Use W", true);
-        }
-
-        public override void MiscMenu(Menu config)
-        {
-            config.AddSlider("Misc.Q.Count", "R/Q Enemy in Range", 2, 0, 4);
-            config.AddSlider("Misc.W.Hp", "R/W HP", 40, 1, 100);
-            config.AddSlider("Misc.E.Count", "R/E Ally in Range", 3, 0, 4);
         }
 
         public override void HarassMenu(Menu config)
@@ -113,6 +35,88 @@ namespace Support.Plugins
         public override void InterruptMenu(Menu config)
         {
             config.AddBool("Gapcloser.W", "Use W to Interrupt Gapcloser", true);
+        }
+
+        public override void MiscMenu(Menu config)
+        {
+            config.AddSlider("Misc.Q.Count", "R/Q Enemy in Range", 2, 0, 4);
+            config.AddSlider("Misc.W.Hp", "R/W HP", 40, 1, 100);
+            config.AddSlider("Misc.E.Count", "R/E Ally in Range", 3, 0, 4);
+        }
+
+        public override void OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (gapcloser.Sender.IsAlly)
+            {
+                return;
+            }
+
+            if (this.W.CastCheck(gapcloser.Sender, "Gapcloser.W"))
+            {
+                this.W.CastOnUnit(gapcloser.Sender);
+            }
+        }
+
+        public override void OnUpdate(EventArgs args)
+        {
+            if (this.ComboMode)
+            {
+                if (this.Q.CastCheck(this.Target, "Combo.Q") && this.R.IsReady()
+                    && this.Q.GetPrediction(this.Target).Hitchance >= HitChance.High
+                    && this.Q.GetPrediction(this.Target).CollisionObjects.Count == 0
+                    && this.Q.GetPrediction(this.Target).UnitPosition.CountEnemiesInRange(250)
+                    >= this.ConfigValue<Slider>("Misc.Q.Count").Value)
+                {
+                    this.R.CastOnUnit(this.Player);
+                    Utility.DelayAction.Add(200, () => this.Q.Cast(this.Target));
+                }
+                if (this.Q.CastCheck(this.Target, "Combo.Q"))
+                {
+                    this.Q.Cast(this.Target);
+                }
+
+                if (this.W.CastCheck(this.Target, "Combo.W") && this.R.IsReady()
+                    && this.Player.HealthPercent <= this.ConfigValue<Slider>("Misc.W.Hp").Value)
+                {
+                    this.R.CastOnUnit(this.Player);
+                    Utility.DelayAction.Add(200, () => this.W.CastOnUnit(this.Target));
+                }
+                if (this.W.CastCheck(this.Target, "Combo.W"))
+                {
+                    this.W.CastOnUnit(this.Target);
+                }
+
+                if (this.E.IsReady() && this.R.IsReady()
+                    && Helpers.AllyInRange(600).Count >= this.ConfigValue<Slider>("Misc.E.Count").Value)
+                {
+                    this.R.CastOnUnit(this.Player);
+                    Utility.DelayAction.Add(200, () => this.E.CastOnUnit(this.Player));
+                }
+            }
+
+            if (this.HarassMode)
+            {
+                if (this.Q.CastCheck(this.Target, "Harass.Q") && this.R.IsReady()
+                    && this.Q.GetPrediction(this.Target).Hitchance >= HitChance.High
+                    && this.Q.GetPrediction(this.Target).CollisionObjects.Count == 0
+                    && this.Q.GetPrediction(this.Target).UnitPosition.CountEnemiesInRange(250)
+                    >= this.ConfigValue<Slider>("Misc.Q.Count").Value)
+                {
+                    this.R.CastOnUnit(this.Player);
+                    Utility.DelayAction.Add(200, () => this.Q.Cast(this.Target));
+                }
+                if (this.Q.CastCheck(this.Target, "Harass.Q"))
+                {
+                    this.Q.Cast(this.Target);
+                }
+
+                if (this.E.IsReady() && this.R.IsReady()
+                    && Helpers.AllyInRange(600).Count >= this.ConfigValue<Slider>("Misc.E.Count").Value)
+                {
+                    this.R.CastOnUnit(this.Player);
+                    Utility.DelayAction.Add(200, () => this.E.CastOnUnit(this.Player));
+                }
+            }
         }
     }
 }

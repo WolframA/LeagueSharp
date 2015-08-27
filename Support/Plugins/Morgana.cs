@@ -1,106 +1,26 @@
-﻿using System;
-using System.Linq;
-using LeagueSharp;
-using LeagueSharp.Common;
-using Support.Util;
-using ActiveGapcloser = Support.Util.ActiveGapcloser;
-
-namespace Support.Plugins
+﻿namespace Support.Plugins
 {
+    using System;
+    using System.Linq;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
+    using Support.Util;
+
+    using ActiveGapcloser = LeagueSharp.Common.ActiveGapcloser;
+
     public class Morgana : PluginBase
     {
         public Morgana()
         {
-            Q = new Spell(SpellSlot.Q, 1175);
-            W = new Spell(SpellSlot.W, 900);
-            E = new Spell(SpellSlot.E, 750);
-            R = new Spell(SpellSlot.R, 550);
+            this.Q = new Spell(SpellSlot.Q, 1175);
+            this.W = new Spell(SpellSlot.W, 900);
+            this.E = new Spell(SpellSlot.E, 750);
+            this.R = new Spell(SpellSlot.R, 550);
 
-            Q.SetSkillshot(0.25f, 80f, 1200f, true, SkillshotType.SkillshotLine);
-            W.SetSkillshot(0.28f, 175f, float.MaxValue, false, SkillshotType.SkillshotCircle);
-        }
-
-        public override void OnUpdate(EventArgs args)
-        {
-            try
-            {
-                if (ComboMode)
-                {
-                    if (Q.CastCheck(Target, "ComboQ") && Q.CastWithHitChance(Target, "ComboQHC"))
-                    {
-                        return;
-                    }
-
-                    if (W.CastCheck(Target, "ComboW"))
-                    {
-                        if (
-                            HeroManager.Enemies
-                                .Where(hero => (hero.IsValidTarget(W.Range) && hero.IsMovementImpaired()))
-                                .Any(enemy => W.Cast(enemy.Position)))
-                        {
-                            return;
-                        }
-
-                        if (
-                            HeroManager.Enemies
-                                .Where(hero => hero.IsValidTarget(W.Range))
-                                .Any(enemy => W.CastIfWillHit(enemy, 1)))
-                        {
-                            return;
-                        }
-                    }
-
-                    if (R.CastCheck(Target, "ComboR") &&
-                        Helpers.EnemyInRange(ConfigValue<Slider>("ComboCountR").Value, R.Range))
-                    {
-                        R.Cast();
-                    }
-                    return;
-                }
-
-                if (HarassMode)
-                {
-                    if (Q.CastCheck(Target, "HarassQ") && Q.CastWithHitChance(Target, "HarassQHC"))
-                    {
-                        return;
-                    }
-
-                    if (W.CastCheck(Target, "HarassW"))
-                    {
-                        if (
-                            HeroManager.Enemies
-                                .Where(hero => (hero.IsValidTarget(W.Range) && hero.IsMovementImpaired()))
-                                .Any(enemy => W.Cast(enemy.Position)))
-                        {
-                            return;
-                        }
-
-                        if (
-                            HeroManager.Enemies
-                                .Where(hero => hero.IsValidTarget(W.Range))
-                                .Any(enemy => W.CastIfWillHit(enemy, 1)))
-                        {
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-        public override void OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        {
-            if (gapcloser.Sender.IsAlly)
-            {
-                return;
-            }
-
-            if (Q.CastCheck(gapcloser.Sender, "GapcloserQ"))
-            {
-                Q.Cast(gapcloser.Sender);
-            }
+            this.Q.SetSkillshot(0.25f, 80f, 1200f, true, SkillshotType.SkillshotLine);
+            this.W.SetSkillshot(0.28f, 175f, float.MaxValue, false, SkillshotType.SkillshotCircle);
         }
 
         public override void ComboMenu(Menu config)
@@ -133,6 +53,87 @@ namespace Support.Plugins
         public override void InterruptMenu(Menu config)
         {
             config.AddBool("GapcloserQ", "Use Q to Interrupt Gapcloser", true);
+        }
+
+        public override void OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (gapcloser.Sender.IsAlly)
+            {
+                return;
+            }
+
+            if (this.Q.CastCheck(gapcloser.Sender, "GapcloserQ"))
+            {
+                this.Q.Cast(gapcloser.Sender);
+            }
+        }
+
+        public override void OnUpdate(EventArgs args)
+        {
+            try
+            {
+                if (this.ComboMode)
+                {
+                    if (this.Q.CastCheck(this.Target, "ComboQ") && this.Q.CastWithHitChance(this.Target, "ComboQHC"))
+                    {
+                        return;
+                    }
+
+                    if (this.W.CastCheck(this.Target, "ComboW"))
+                    {
+                        if (
+                            HeroManager.Enemies.Where(
+                                hero => (hero.IsValidTarget(this.W.Range) && hero.IsMovementImpaired()))
+                                       .Any(enemy => this.W.Cast(enemy.Position)))
+                        {
+                            return;
+                        }
+
+                        if (
+                            HeroManager.Enemies.Where(hero => hero.IsValidTarget(this.W.Range))
+                                       .Any(enemy => this.W.CastIfWillHit(enemy, 1)))
+                        {
+                            return;
+                        }
+                    }
+
+                    if (this.R.CastCheck(this.Target, "ComboR")
+                        && Helpers.EnemyInRange(this.ConfigValue<Slider>("ComboCountR").Value, this.R.Range))
+                    {
+                        this.R.Cast();
+                    }
+                    return;
+                }
+
+                if (this.HarassMode)
+                {
+                    if (this.Q.CastCheck(this.Target, "HarassQ") && this.Q.CastWithHitChance(this.Target, "HarassQHC"))
+                    {
+                        return;
+                    }
+
+                    if (this.W.CastCheck(this.Target, "HarassW"))
+                    {
+                        if (
+                            HeroManager.Enemies.Where(
+                                hero => (hero.IsValidTarget(this.W.Range) && hero.IsMovementImpaired()))
+                                       .Any(enemy => this.W.Cast(enemy.Position)))
+                        {
+                            return;
+                        }
+
+                        if (
+                            HeroManager.Enemies.Where(hero => hero.IsValidTarget(this.W.Range))
+                                       .Any(enemy => this.W.CastIfWillHit(enemy, 1)))
+                        {
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

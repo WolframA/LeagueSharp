@@ -1,12 +1,15 @@
-﻿using System;
-using System.Reflection;
-using LeagueSharp;
-using LeagueSharp.Common;
-using Support.Util;
-using Version = System.Version;
-
-namespace Support
+﻿namespace Support
 {
+    using System;
+    using System.Reflection;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
+    using Support.Util;
+
+    using Version = System.Version;
+
     internal class Program
     {
         public static Version Version;
@@ -16,27 +19,27 @@ namespace Support
             Version = Assembly.GetExecutingAssembly().GetName().Version;
 
             CustomEvents.Game.OnGameLoad += a =>
-            {
-                try
                 {
-                    var type = Type.GetType("Support.Plugins." + ObjectManager.Player.ChampionName);
-
-                    if (type != null)
+                    try
                     {
-                        Helpers.UpdateCheck();
-                        Protector.Init();
-                        //SpellDetector.Init();
-                        DynamicInitializer.NewInstance(type);
-                        return;
-                    }
+                        var type = Type.GetType("Support.Plugins." + ObjectManager.Player.ChampionName);
 
-                    Helpers.PrintMessage(ObjectManager.Player.ChampionName + " not supported");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            };
+                        if (type != null)
+                        {
+                            Helpers.UpdateCheck();
+                            Protector.Init();
+                            //SpellDetector.Init();
+                            DynamicInitializer.NewInstance(type);
+                            return;
+                        }
+
+                        Helpers.PrintMessage(ObjectManager.Player.ChampionName + " not supported");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                };
 
             //Utils.EnableConsoleEditMode();
 

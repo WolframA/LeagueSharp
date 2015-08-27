@@ -1,56 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using LeagueSharp;
-using LeagueSharp.Common;
-using SharpDX;
-
-namespace Support.Util
+﻿namespace Support.Util
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
+    using SharpDX;
+
     public delegate void OnGapcloseH(ActiveGapcloser gapcloser);
 
     public enum GapcloserType
     {
         Skillshot,
+
         Targeted
     }
 
     public struct Gapcloser
     {
         public string ChampionName;
+
         public GapcloserType SkillType;
+
         public SpellSlot Slot;
+
         public int Speed;
+
         public string SpellName;
     }
 
     public struct ActiveGapcloser
     {
         public Vector3 End;
+
         public int EndTick;
+
         public Obj_AI_Base Sender;
+
         public GapcloserType SkillType;
+
         public Vector3 Start;
+
         public int StartTick;
     }
 
     public static class AntiGapcloser
     {
-        public static List<Gapcloser> Spells = new List<Gapcloser>();
-        public static List<ActiveGapcloser> ActiveGapclosers = new List<ActiveGapcloser>();
-
         static AntiGapcloser()
         {
             #region Aatrox
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Aatrox",
-                    Slot = SpellSlot.Q,
-                    SpellName = "aatroxq",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Aatrox",
+                        Slot = SpellSlot.Q,
+                        SpellName = "aatroxq",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -58,12 +67,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Akali",
-                    Slot = SpellSlot.R,
-                    SpellName = "akalishadowdance",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "Akali",
+                        Slot = SpellSlot.R,
+                        SpellName = "akalishadowdance",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -71,12 +80,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Alistar",
-                    Slot = SpellSlot.E,
-                    SpellName = "headbutt",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "Alistar",
+                        Slot = SpellSlot.E,
+                        SpellName = "headbutt",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -84,12 +93,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "LeeSin",
-                    Slot = SpellSlot.Q,
-                    SpellName = "blindmonkqtwo",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "LeeSin",
+                        Slot = SpellSlot.Q,
+                        SpellName = "blindmonkqtwo",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -97,12 +106,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Diana",
-                    Slot = SpellSlot.R,
-                    SpellName = "dianateleport",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "Diana",
+                        Slot = SpellSlot.R,
+                        SpellName = "dianateleport",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -110,12 +119,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Elise",
-                    Slot = SpellSlot.Q,
-                    SpellName = "elisespiderqcast",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Elise",
+                        Slot = SpellSlot.Q,
+                        SpellName = "elisespiderqcast",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -123,12 +132,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Fiora",
-                    Slot = SpellSlot.Q,
-                    SpellName = "fioraq",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "Fiora",
+                        Slot = SpellSlot.Q,
+                        SpellName = "fioraq",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -136,12 +145,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Fizz",
-                    Slot = SpellSlot.Q,
-                    SpellName = "fizzpiercingstrike",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "Fizz",
+                        Slot = SpellSlot.Q,
+                        SpellName = "fizzpiercingstrike",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -149,12 +158,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Gnar",
-                    Slot = SpellSlot.E,
-                    SpellName = "gnarbige",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Gnar",
+                        Slot = SpellSlot.E,
+                        SpellName = "gnarbige",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -162,12 +171,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Gragas",
-                    Slot = SpellSlot.E,
-                    SpellName = "gragase",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Gragas",
+                        Slot = SpellSlot.E,
+                        SpellName = "gragase",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -175,12 +184,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Hecarim",
-                    Slot = SpellSlot.R,
-                    SpellName = "hecarimult",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Hecarim",
+                        Slot = SpellSlot.R,
+                        SpellName = "hecarimult",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -188,12 +197,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Irelia",
-                    Slot = SpellSlot.Q,
-                    SpellName = "ireliagatotsu",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "Irelia",
+                        Slot = SpellSlot.Q,
+                        SpellName = "ireliagatotsu",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -201,12 +210,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "JarvanIV",
-                    Slot = SpellSlot.Q,
-                    SpellName = "jarvanivdragonstrike",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "JarvanIV",
+                        Slot = SpellSlot.Q,
+                        SpellName = "jarvanivdragonstrike",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -214,12 +223,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Jax",
-                    Slot = SpellSlot.Q,
-                    SpellName = "jaxleapstrike",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "Jax",
+                        Slot = SpellSlot.Q,
+                        SpellName = "jaxleapstrike",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -227,21 +236,21 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Khazix",
-                    Slot = SpellSlot.E,
-                    SpellName = "khazixe",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Khazix",
+                        Slot = SpellSlot.E,
+                        SpellName = "khazixe",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Khazix",
-                    Slot = SpellSlot.E,
-                    SpellName = "khazixelong",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Khazix",
+                        Slot = SpellSlot.E,
+                        SpellName = "khazixelong",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -249,21 +258,21 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "LeBlanc",
-                    Slot = SpellSlot.W,
-                    SpellName = "leblancslide",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "LeBlanc",
+                        Slot = SpellSlot.W,
+                        SpellName = "leblancslide",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "LeBlanc",
-                    Slot = SpellSlot.R,
-                    SpellName = "leblancslidem",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "LeBlanc",
+                        Slot = SpellSlot.R,
+                        SpellName = "leblancslidem",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -271,12 +280,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Leona",
-                    Slot = SpellSlot.Q,
-                    SpellName = "leonazenithblade",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Leona",
+                        Slot = SpellSlot.Q,
+                        SpellName = "leonazenithblade",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -284,12 +293,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "MonkeyKing",
-                    Slot = SpellSlot.E,
-                    SpellName = "monkeykingnimbus",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "MonkeyKing",
+                        Slot = SpellSlot.E,
+                        SpellName = "monkeykingnimbus",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -297,12 +306,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Pantheon",
-                    Slot = SpellSlot.W,
-                    SpellName = "pantheon_leapbash",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "Pantheon",
+                        Slot = SpellSlot.W,
+                        SpellName = "pantheon_leapbash",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -310,12 +319,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Poppy",
-                    Slot = SpellSlot.E,
-                    SpellName = "poppyheroiccharge",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "Poppy",
+                        Slot = SpellSlot.E,
+                        SpellName = "poppyheroiccharge",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -323,12 +332,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Renekton",
-                    Slot = SpellSlot.E,
-                    SpellName = "renektonsliceanddice",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Renekton",
+                        Slot = SpellSlot.E,
+                        SpellName = "renektonsliceanddice",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -336,21 +345,21 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Riven",
-                    Slot = SpellSlot.Q,
-                    SpellName = "riventricleave",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Riven",
+                        Slot = SpellSlot.Q,
+                        SpellName = "riventricleave",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Riven",
-                    Slot = SpellSlot.E,
-                    SpellName = "rivenfeint",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Riven",
+                        Slot = SpellSlot.E,
+                        SpellName = "rivenfeint",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -358,12 +367,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Sejuani",
-                    Slot = SpellSlot.Q,
-                    SpellName = "sejuaniarcticassault",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Sejuani",
+                        Slot = SpellSlot.Q,
+                        SpellName = "sejuaniarcticassault",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -371,12 +380,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Malphite",
-                    Slot = SpellSlot.R,
-                    SpellName = "ufslash",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Malphite",
+                        Slot = SpellSlot.R,
+                        SpellName = "ufslash",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -384,12 +393,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Vi",
-                    Slot = SpellSlot.Q,
-                    SpellName = "viq",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Vi",
+                        Slot = SpellSlot.Q,
+                        SpellName = "viq",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -397,12 +406,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "XinZhao",
-                    Slot = SpellSlot.E,
-                    SpellName = "xenzhaosweep",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "XinZhao",
+                        Slot = SpellSlot.E,
+                        SpellName = "xenzhaosweep",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -410,12 +419,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Yasuo",
-                    Slot = SpellSlot.E,
-                    SpellName = "yasuodashwrapper",
-                    SkillType = GapcloserType.Targeted
-                });
+                    {
+                        ChampionName = "Yasuo",
+                        Slot = SpellSlot.E,
+                        SpellName = "yasuodashwrapper",
+                        SkillType = GapcloserType.Targeted
+                    });
 
             #endregion
 
@@ -423,12 +432,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Tryndamere",
-                    Slot = SpellSlot.E,
-                    SpellName = "slashcast",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Tryndamere",
+                        Slot = SpellSlot.E,
+                        SpellName = "slashcast",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -436,12 +445,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Lucian",
-                    Slot = SpellSlot.E,
-                    SpellName = "luciane",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Lucian",
+                        Slot = SpellSlot.E,
+                        SpellName = "luciane",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -449,12 +458,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Tristana",
-                    Slot = SpellSlot.W,
-                    SpellName = "RocketJump",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Tristana",
+                        Slot = SpellSlot.W,
+                        SpellName = "RocketJump",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -462,12 +471,12 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Zac",
-                    Slot = SpellSlot.E,
-                    SpellName = "zace",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Zac",
+                        Slot = SpellSlot.E,
+                        SpellName = "zace",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
@@ -475,18 +484,22 @@ namespace Support.Util
 
             Spells.Add(
                 new Gapcloser
-                {
-                    ChampionName = "Ziggs",
-                    Slot = SpellSlot.W,
-                    SpellName = "ziggswtoggle",
-                    SkillType = GapcloserType.Skillshot
-                });
+                    {
+                        ChampionName = "Ziggs",
+                        Slot = SpellSlot.W,
+                        SpellName = "ziggswtoggle",
+                        SkillType = GapcloserType.Skillshot
+                    });
 
             #endregion
 
             Game.OnUpdate += Game_OnGameUpdate;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
         }
+
+        public static List<ActiveGapcloser> ActiveGapclosers = new List<ActiveGapcloser>();
+
+        public static List<Gapcloser> Spells = new List<Gapcloser>();
 
         public static event OnGapcloseH OnEnemyGapcloser;
 
@@ -503,13 +516,10 @@ namespace Support.Util
 
                 foreach (var gapcloser in ActiveGapclosers)
                 {
-                    if (gapcloser.SkillType == GapcloserType.Targeted ||
-                        (gapcloser.SkillType == GapcloserType.Skillshot &&
-                         HeroManager.Allies
-                             .Any(
-                                 h =>
-                                     !h.IsDead &&
-                                     (h.Distance(gapcloser.Start) < 800 || h.Distance(gapcloser.End) < 800))))
+                    if (gapcloser.SkillType == GapcloserType.Targeted
+                        || (gapcloser.SkillType == GapcloserType.Skillshot
+                            && HeroManager.Allies.Any(
+                                h => !h.IsDead && (h.Distance(gapcloser.Start) < 800 || h.Distance(gapcloser.End) < 800))))
                     {
                         if (gapcloser.Sender.IsValidTarget())
                         {
@@ -524,6 +534,11 @@ namespace Support.Util
             }
         }
 
+        private static Gapcloser GetGapcloser(GameObjectProcessSpellCastEventArgs args)
+        {
+            return Spells.SingleOrDefault(spell => spell.SpellName == args.SData.Name.ToLowerInvariant());
+        }
+
         private static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (!SpellIsGapcloser(args))
@@ -533,24 +548,19 @@ namespace Support.Util
 
             ActiveGapclosers.Add(
                 new ActiveGapcloser
-                {
-                    Start = args.Start,
-                    End = args.End,
-                    Sender = sender,
-                    StartTick = Environment.TickCount,
-                    EndTick = Environment.TickCount + 900, // TODO: calc duration with speed
-                    SkillType = GetGapcloser(args).SkillType
-                });
+                    {
+                        Start = args.Start,
+                        End = args.End,
+                        Sender = sender,
+                        StartTick = Environment.TickCount,
+                        EndTick = Environment.TickCount + 900, // TODO: calc duration with speed
+                        SkillType = GetGapcloser(args).SkillType
+                    });
         }
 
         private static bool SpellIsGapcloser(GameObjectProcessSpellCastEventArgs args)
         {
             return Spells.Any(spell => spell.SpellName == args.SData.Name.ToLower());
-        }
-
-        private static Gapcloser GetGapcloser(GameObjectProcessSpellCastEventArgs args)
-        {
-            return Spells.SingleOrDefault(spell => spell.SpellName == args.SData.Name.ToLowerInvariant());
         }
     }
 }

@@ -1,74 +1,22 @@
-﻿using System;
-using LeagueSharp;
-using LeagueSharp.Common;
-using Support.Util;
-using ActiveGapcloser = Support.Util.ActiveGapcloser;
-
-namespace Support.Plugins
+﻿namespace Support.Plugins
 {
+    using System;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
+    using Support.Util;
+
+    using ActiveGapcloser = LeagueSharp.Common.ActiveGapcloser;
+
     public class Zilean : PluginBase
     {
         public Zilean()
         {
-            Q = new Spell(SpellSlot.Q, 700);
-            W = new Spell(SpellSlot.W, 0);
-            E = new Spell(SpellSlot.E, 700);
-            R = new Spell(SpellSlot.R, 900);
-        }
-
-        public override void OnUpdate(EventArgs args)
-        {
-            try
-            {
-                if (ComboMode)
-                {
-                    if (Q.CastCheck(Target, "ComboQ"))
-                    {
-                        Q.Cast(Target);
-                    }
-
-                    if (W.IsReady() && !Q.IsReady() && ConfigValue<bool>("ComboW"))
-                    {
-                        W.Cast();
-                    }
-
-                    // TODO: speed adc/jungler/engage
-                    if (E.IsReady() && Player.CountEnemiesInRange(2000) > 0 && ConfigValue<bool>("ComboE"))
-                    {
-                        E.Cast(Player);
-                    }
-                }
-
-                if (HarassMode)
-                {
-                    if (Q.CastCheck(Target, "HarassQ"))
-                    {
-                        Q.Cast(Target);
-                    }
-
-                    if (W.IsReady() && !Q.IsReady() && ConfigValue<bool>("HarassW"))
-                    {
-                        W.Cast();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-        public override void OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        {
-            if (gapcloser.Sender.IsAlly)
-            {
-                return;
-            }
-
-            if (E.CastCheck(gapcloser.Sender, "GapcloserE"))
-            {
-                E.Cast(gapcloser.Sender);
-            }
+            this.Q = new Spell(SpellSlot.Q, 700);
+            this.W = new Spell(SpellSlot.W, 0);
+            this.E = new Spell(SpellSlot.E, 700);
+            this.R = new Spell(SpellSlot.R, 900);
         }
 
         public override void ComboMenu(Menu config)
@@ -87,6 +35,62 @@ namespace Support.Plugins
         public override void InterruptMenu(Menu config)
         {
             config.AddBool("GapcloserE", "Use E to Interrupt Gapcloser", true);
+        }
+
+        public override void OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (gapcloser.Sender.IsAlly)
+            {
+                return;
+            }
+
+            if (this.E.CastCheck(gapcloser.Sender, "GapcloserE"))
+            {
+                this.E.Cast(gapcloser.Sender);
+            }
+        }
+
+        public override void OnUpdate(EventArgs args)
+        {
+            try
+            {
+                if (this.ComboMode)
+                {
+                    if (this.Q.CastCheck(this.Target, "ComboQ"))
+                    {
+                        this.Q.Cast(this.Target);
+                    }
+
+                    if (this.W.IsReady() && !this.Q.IsReady() && this.ConfigValue<bool>("ComboW"))
+                    {
+                        this.W.Cast();
+                    }
+
+                    // TODO: speed adc/jungler/engage
+                    if (this.E.IsReady() && this.Player.CountEnemiesInRange(2000) > 0
+                        && this.ConfigValue<bool>("ComboE"))
+                    {
+                        this.E.Cast(this.Player);
+                    }
+                }
+
+                if (this.HarassMode)
+                {
+                    if (this.Q.CastCheck(this.Target, "HarassQ"))
+                    {
+                        this.Q.Cast(this.Target);
+                    }
+
+                    if (this.W.IsReady() && !this.Q.IsReady() && this.ConfigValue<bool>("HarassW"))
+                    {
+                        this.W.Cast();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

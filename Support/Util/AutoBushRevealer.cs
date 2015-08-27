@@ -1,41 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using LeagueSharp;
-using LeagueSharp.Common;
-using SharpDX;
-
-namespace Support.Util
+﻿namespace Support.Util
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
+    using SharpDX;
+
     public class AutoBushRevealer
     {
-        private static readonly List<KeyValuePair<int, String>> Wards = new List<KeyValuePair<int, String>>
-        {
-            new KeyValuePair<int, String>(3340, "Warding Totem Trinket"),
-            new KeyValuePair<int, String>(3361, "Greater Stealth Totem Trinket"),
-            new KeyValuePair<int, String>(3205, "Quill Coat"),
-            new KeyValuePair<int, String>(3207, "Spirit Of The Ancient Golem"),
-            new KeyValuePair<int, String>(3154, "Wriggle's Lantern"),
-            new KeyValuePair<int, String>(2049, "Sight Stone"),
-            new KeyValuePair<int, String>(2045, "Ruby Sightstone"),
-            new KeyValuePair<int, String>(3160, "Feral Flare"),
-            new KeyValuePair<int, String>(2050, "Explorer's Ward"),
-            new KeyValuePair<int, String>(2044, "Stealth Ward")
-        };
-
-        private readonly List<EnemyInfo> _enemyInfo;
-        private readonly Menu _menu;
-        private int _lastTimeWarded;
-
         public AutoBushRevealer(Menu menu)
         {
-            _enemyInfo = HeroManager.Enemies.Select(x => new EnemyInfo(x)).ToList();
+            this._enemyInfo = HeroManager.Enemies.Select(x => new EnemyInfo(x)).ToList();
 
-            _menu = menu.AddSubMenu(new Menu("Auto Bush Revealer", "AutoBushRevealerMenu"));
-            _menu.AddItem(new MenuItem("Auto Bush Revealer", "AutoBushRevealer").SetValue(true));
-            _menu.AddItem(new MenuItem("AutoBushEnabled", "Enabled").SetValue(true));
+            this._menu = menu.AddSubMenu(new Menu("Auto Bush Revealer", "AutoBushRevealerMenu"));
+            this._menu.AddItem(new MenuItem("Auto Bush Revealer", "AutoBushRevealer").SetValue(true));
+            this._menu.AddItem(new MenuItem("AutoBushEnabled", "Enabled").SetValue(true));
 
-            var useWardsMenu = _menu.AddSubMenu(new Menu("Use Wards: ", "AutoBushUseWards"));
+            var useWardsMenu = this._menu.AddSubMenu(new Menu("Use Wards: ", "AutoBushUseWards"));
 
             foreach (var ward in Wards)
             {
@@ -45,27 +29,31 @@ namespace Support.Util
             //Game.OnGameUpdate += Game_OnGameUpdate; // TODO: wait for update
         }
 
-        private InventorySlot GetWardSlot()
-        {
-            return
-                Wards.Select(x => x.Key)
-                    .Where(id => _menu.Item("AutoBush" + id).GetValue<bool>() && Items.CanUseItem(id))
-                    .Select(
-                        wardId => ObjectManager.Player.InventoryItems.FirstOrDefault(slot => slot.Id == (ItemId) wardId))
-                    .FirstOrDefault();
-        }
+        private readonly List<EnemyInfo> _enemyInfo;
 
-        private Obj_AI_Base GetNearObject(String name, Vector3 pos, int maxDistance)
-        {
-            return ObjectManager.Get<Obj_AI_Base>()
-                .FirstOrDefault(x => x.Name == name && x.Distance(pos) <= maxDistance);
-        }
+        private readonly Menu _menu;
+
+        private static readonly List<KeyValuePair<int, string>> Wards = new List<KeyValuePair<int, string>>
+            {
+                new KeyValuePair<int, string>(3340, "Warding Totem Trinket"),
+                new KeyValuePair<int, string>(3361, "Greater Stealth Totem Trinket"),
+                new KeyValuePair<int, string>(3205, "Quill Coat"),
+                new KeyValuePair<int, string>(3207, "Spirit Of The Ancient Golem"),
+                new KeyValuePair<int, string>(3154, "Wriggle's Lantern"),
+                new KeyValuePair<int, string>(2049, "Sight Stone"),
+                new KeyValuePair<int, string>(2045, "Ruby Sightstone"),
+                new KeyValuePair<int, string>(3160, "Feral Flare"),
+                new KeyValuePair<int, string>(2050, "Explorer's Ward"),
+                new KeyValuePair<int, string>(2044, "Stealth Ward")
+            };
+
+        private int _lastTimeWarded;
 
         private void Game_OnGameUpdate(EventArgs args)
         {
             var time = Environment.TickCount;
 
-            foreach (var enemyInfo in _enemyInfo.Where(x => x.Player.IsVisible))
+            foreach (var enemyInfo in this._enemyInfo.Where(x => x.Player.IsVisible))
             {
                 enemyInfo.LastSeen = time;
             }
@@ -75,36 +63,43 @@ namespace Support.Util
                 return;
             }
 
-            if (_menu.Item("AutoBushEnabled").GetValue<bool>())
+            if (this._menu.Item("AutoBushEnabled").GetValue<bool>())
             {
                 foreach (var enemy in
-                    _enemyInfo.Where(
+                    this._enemyInfo.Where(
                         x =>
-                            x.Player.IsValid && !x.Player.IsVisible && !x.Player.IsDead &&
-                            x.Player.Distance(ObjectManager.Player.ServerPosition) < 1000 && time - x.LastSeen < 2500)
+                        x.Player.IsValid && !x.Player.IsVisible && !x.Player.IsDead
+                        && x.Player.Distance(ObjectManager.Player.ServerPosition) < 1000 && time - x.LastSeen < 2500)
                         .Select(x => x.Player))
                 {
-                    var bestWardPos = GetWardPos(enemy.ServerPosition, 165, 2);
+                    var bestWardPos = this.GetWardPos(enemy.ServerPosition, 165, 2);
 
-                    if (bestWardPos != enemy.ServerPosition && bestWardPos != Vector3.Zero &&
-                        bestWardPos.Distance(ObjectManager.Player.ServerPosition) <= 600)
+                    if (bestWardPos != enemy.ServerPosition && bestWardPos != Vector3.Zero
+                        && bestWardPos.Distance(ObjectManager.Player.ServerPosition) <= 600)
                     {
-                        var timedif = Environment.TickCount - _lastTimeWarded;
+                        var timedif = Environment.TickCount - this._lastTimeWarded;
 
-                        if (timedif > 1250 && !(timedif < 2500 && GetNearObject("SightWard", bestWardPos, 200) != null))
+                        if (timedif > 1250
+                            && !(timedif < 2500 && this.GetNearObject("SightWard", bestWardPos, 200) != null))
                             //no near wards
                         {
-                            var wardSlot = GetWardSlot();
+                            var wardSlot = this.GetWardSlot();
 
                             if (wardSlot != null && wardSlot.Id != ItemId.Unknown)
                             {
                                 //wardSlot.UseItem(bestWardPos); // TODO fix for 4.21
-                                _lastTimeWarded = Environment.TickCount;
+                                this._lastTimeWarded = Environment.TickCount;
                             }
                         }
                     }
                 }
             }
+        }
+
+        private Obj_AI_Base GetNearObject(string name, Vector3 pos, int maxDistance)
+        {
+            return ObjectManager.Get<Obj_AI_Base>()
+                                .FirstOrDefault(x => x.Name == name && x.Distance(pos) <= maxDistance);
         }
 
         private Vector3 GetWardPos(Vector3 lastPos, int radius = 165, int precision = 3)
@@ -153,39 +148,52 @@ namespace Support.Util
             //    return lastPos;
         }
 
+        private InventorySlot GetWardSlot()
+        {
+            return
+                Wards.Select(x => x.Key)
+                     .Where(id => this._menu.Item("AutoBush" + id).GetValue<bool>() && Items.CanUseItem(id))
+                     .Select(
+                         wardId => ObjectManager.Player.InventoryItems.FirstOrDefault(slot => slot.Id == (ItemId)wardId))
+                     .FirstOrDefault();
+        }
+
         private class EnemyInfo
         {
             public EnemyInfo(Obj_AI_Hero player)
             {
-                Player = player;
+                this.Player = player;
             }
 
             public int LastSeen { get; set; }
+
             public Obj_AI_Hero Player { get; set; }
         }
 
         private class GrassLocation
         {
-            public readonly int Index;
-            public int Count;
-
             public GrassLocation(int index, int count)
             {
-                Index = index;
-                Count = count;
+                this.Index = index;
+                this.Count = count;
             }
+
+            public readonly int Index;
+
+            public int Count;
         }
 
         private class WardLocation
         {
-            public readonly bool Grass;
-            public readonly Vector3 Pos;
-
             public WardLocation(Vector3 pos, bool grass)
             {
-                Pos = pos;
-                Grass = grass;
+                this.Pos = pos;
+                this.Grass = grass;
             }
+
+            public readonly bool Grass;
+
+            public readonly Vector3 Pos;
         }
     }
 }
